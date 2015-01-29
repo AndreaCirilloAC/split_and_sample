@@ -1,0 +1,25 @@
+data
+# 'data' dataframe is a dataframe recording maintenance activities, composed by 4 columns:
+  # asset (factor),           with the asset maintened
+  # category(factor),         with the type of maintenence activity
+  # description (string)      with a detailed description of the activity
+  # date ( Date)              with the record date
+#clustering
+
+data_asset <- split(data,data$asset)                                              # split the data frame based on the attribute asset
+                                                                                  # the result of the splitting is a list of dataframes
+#sampling
+
+for(i in 1:length(data_asset)){                                                   # for each data frame in the list resulting from the
+                                                                                  # split
+  frame          <- data.frame(data_asset[i])                                     # select a data frame
+  unique_date    <- unique(frame[,4])                                             # create a vector with unique dates
+  sample         <- sample(x= unique_date,size=round(0.05*length(unique_date),0)) # sample based on a percentage of the total number of
+                                                                                  # unique dates for that cluster
+  frame <- data.frame(subset(frame ,frame[,4] %in% sample))                       # filter the data frame based on the resulting sample
+                                                                                  # of dates
+  
+  data_asset[[i]] <-frame                                                         # assign the data frame to the original position within
+                                                                                  # the list
+  
+}
